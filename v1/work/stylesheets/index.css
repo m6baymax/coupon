@@ -1,0 +1,47 @@
+html,
+body {
+    background-color: transparent;
+    color: #000;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: .96rem;
+    color: #333;
+    background-color: #fff;
+}
+
+.header {
+    height: 65px;
+    background-color: #ccc;
+}
+
+.container-fluid {
+    position: relative;
+}
+
+.left-side {
+    background-color: #ccc;
+    height: 100%;
+}
+
+.right-side {
+    background-color: #ccc;
+    height: 100%;
+}
+
+.worktai .wrapper {
+    /*  width: 420px; */
+    /* overflow-y: scroll; */
+    overflow-y: visible;
+    padding: 50px;
+}
+
+.wrapper {
+    background-color: #9d155a;
+}
+
+.mouse-hover-img {
+    border: 3px dotted #ccc;
+}

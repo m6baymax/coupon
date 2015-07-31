@@ -11,55 +11,11 @@
     <script src="javascripts/jquery-1.11.3.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="stylesheets/bootstrap.css" />
     <link rel="stylesheet" href="stylesheets/style.css" />
-    <style type="text/css">
-    html,
-    body {
-        background-color: transparent;
-        color: #000;
-    }
-    body {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 14px;
-      line-height: .96rem;
-      color: #333;
-      background-color: #fff;
-    }    
-    
-    .header {
-        height: 65px;
-        background-color: #ccc;
-    }
-    
-    .container-fluid {
-        position: relative;
-    }
-    
-    
-    .left-side {
-        background-color: #ccc;
-        height: 100%;
-    }
-    
-    .right-side {
-        background-color: #ccc;
-        height: 100%;
-    }
-    
-    .worktai .wrapper {
-       /*  width: 420px; */
-        /* overflow-y: scroll; */
-        overflow-y: visible;
-        padding: 50px;
-    }
-    
-    .wrapper {
-        background-color: #9d155a;
-    }
-    
-    .mouse-hover-img {
-        border: 3px dotted #ccc;
-    }
-    </style>
+    <link rel="stylesheet" type="text/css" href="diyUpload/css/webuploader.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/index.css">
+    <script type="text/javascript" src="diyUpload/js/webuploader.html5only.min.js"></script>
+    <script type="text/javascript" src="javascripts/index.js"></script>
+
     <script type="text/javascript">
         $(function() {
 
@@ -82,48 +38,71 @@
                 $(".rule").toggleClass("on");
             });
 
-            
+
+
+            var cache = {};
+
             $(".worktai")
-            .on("mouseenter", ".wrapper img , .btn-cnt .btn-vip , .rule", function(e) {
-                $(this).addClass("mouse-hover-img");
-            })
-            .on("mouseleave", ".wrapper img , .btn-cnt .btn-vip , .rule", function(e) {
-                $(this).removeClass("mouse-hover-img");
+            .on("click", ".wrapper img , .btn-cnt .btn-vip , .rule", function(e) {
+
+                var $this = $(this);
+                
+                if(!$this.hasClass("mouse-hover-img")){
+                    $(".right-side").empty().append($("#img-reset-tpl").text());
+                    $(".worktai img").removeClass("mouse-hover-img").filter(this).addClass("mouse-hover-img");
+                    
+                    
+                    uploadimg( '' , function( file ) {
+                        $( '#'+file.id ).addClass('upload-state-done');
+                        var oldImgSrc= $this.prop("src");
+                        //var oldImgSrcName = oldImgSrc.substring( oldImgSrc.lastIndexOf('/') + 1 );
+                        var imgPosition = $this.data("pos");
+                        var newImgSrc = "generate/images/" + $("#fileList .info:last").text();
+
+                        cache[imgPosition] = {
+                            "oldImgSrc":oldImgSrc,
+                            "newImgSrc":newImgSrc
+                        };
+                        $this.prop("src" , newImgSrc);
+
+                        console.log(cache);
+                    });
+                }else{
+                    $this.removeClass("mouse-hover-img");
+                }
             });
-
-
         });
+
+
     </script>
 
 </head>
 
 <body>
     <div class="header">
-        header
     </div>
     <div class="container-fluid">
         <div class="row">
             <div class="left-side col-md-2">
-                left
             </div>
             <div class="worktai col-md-7">
                 <div class="wrapper">
                     <!-- banner位 -->
                     <div class="banner">
-                        <img src="resources/images/img_01.jpg" alt="" />
-                        <img src="resources/images/img_02.jpg" alt="" />
+                        <img src="resources/images/img_01.jpg" alt="" data-pos="img_01" />
+                        <img src="resources/images/img_02.jpg" alt="" data-pos="img_02" />
                     </div>
                     <!-- 优惠券。如果已经领取，变类“on”为“off” -->
                     <div class="coupon on">
-                        <img src="resources/images/img_03.jpg" alt="">
+                        <img src="resources/images/img_03.jpg" alt="" data-pos="img_03">
                     </div>
                     <!-- 领取按钮 -->
                     <div class="btn-cnt">
-                        <img src="resources/images/img_04.jpg" alt="">
+                        <img src="resources/images/img_04.jpg" alt="" data-pos="img_04">
                         <!-- 若不可点,加类"btn-disabled" -->
                         <a class="btn-vip" href="javascript:void(0);">注册领取</a>
                     </div>
-                    <img src="resources/images/img_05.jpg" alt="" />
+                    <img src="resources/images/img_05.jpg" alt="" data-pos="img_05"/>
                     <!-- 活动规则 -->
                     <div class="rule">
                         <div class="title">活动规则</div>
@@ -137,13 +116,20 @@
                             <li>7、唯品会在法律法规允许范围可对本活动进行解释。</li>
                         </ul>
                     </div>
-                    <img class="block" src="resources/images/img_07.jpg" alt="" />
+                    <img class="block" src="resources/images/img_07.jpg" alt="" data-pos="img_07" />
                 </div>
             </div>
-            <div class="right-side col-md-3">
-                right
+            <div class="right-side col-md-3">                      
             </div>
         </div>
     </div>
+
+    <script id="img-reset-tpl" type="text/template">
+        <div id="uploader">
+            <div id="fileList" class="uploader-list hidden"></div>
+            <div id="filePicker">选择图片</div>
+        </div>
+    </script> 
 </body>
 </html>
+
