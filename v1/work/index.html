@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="myApp">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
@@ -8,11 +8,11 @@
     <meta content="telephone=no" name="format-detection">
     <title>唯品会</title>
     <script src="javascripts/jquery-1.11.3.js" type="text/javascript" charset="utf-8"></script>
-    <link rel="stylesheet" href="stylesheets/bootstrap.css" />
     <link rel="stylesheet" href="stylesheets/style.css" />
     <link rel="stylesheet" type="text/css" href="diyUpload/css/webuploader.css">
     <link rel="stylesheet" type="text/css" href="stylesheets/index.css">
     <script type="text/javascript" src="diyUpload/js/webuploader.html5only.min.js"></script>
+    <script type="text/javascript" src="javascripts/angular.js"></script>
     <script type="text/javascript" src="javascripts/index.js"></script>
 
     <script type="text/javascript">
@@ -33,50 +33,44 @@
             $(document).resize(setRootFontSize).load(setRootFontSize).resize();
 
             function clickRegisterButton(){
-                $(".right-side").empty().append($("#pop-reset-tpl").text());
-
+                $(".right-side .pop-window").removeClass("hidden");
                 $(".but1").click(function(){
                     $(".pop").addClass("show");
                     $(".pop-con").removeClass("show");
                     $("." + $(this).val() ).addClass("show");
                 });
-
-            }            
+            }   
 
             function clickRoleTitle(){
-                $(".rule").toggleClass("on");
-                $(".right-side").empty().append($("#guize-reset-tpl").text());
+                //$(".rule").toggleClass("on");
+                $(".right-side .guize").removeClass("hidden");
                 
                 var rules = $(".rule li");
                 var ruleString="";
                 $(".rule li").each(function(_, elem){
                     ruleString += $(elem).text().replace(/^\s*/ , "")+"\r\n";
                 });
-
                 $("#guize-content").val(ruleString);
             }
 
-            function clickImage($this){
-                
-                $(".right-side").empty().append($("#img-reset-tpl").text());  
+            function clickImage($this){    
+
+                $(".right-side .uploader").empty().removeClass("hidden").append($("#img-reset-tpl").text());
                 uploadimg('' , function( file ) {
                     $( '#'+file.id ).addClass('upload-state-done');
                     var oldImgSrc = $this.prop("src");
                     var imgPosition = $this.data("pos");
                     var newImgSrc = "generate/images/" + $("#fileList .info:last").text();
-
-                    /*cache[imgPosition] = {
-                        "oldImgSrc":oldImgSrc,
-                        "newImgSrc":newImgSrc
-                    };*/
                     $this.prop("src" , newImgSrc);
+                    $("#fileList").find(".smallimg").remove();
                 });
+
+                $(".uploader-list").append("<img class='smallimg' width=100 height=100 src='"+ $this.prop("src") +"'>");
+
             }
 
-            //var cache = {};
-
             $(".worktai")
-            .on("click", ".wrapper img , .rule , .btn-cnt .btn-vip", function(e) {
+            .on("click", ".wrapper img , .rule , .btn-cnt .btn", function(e) {
 
                 var $this = $(this);
                 var $pop = $(".pop");
@@ -84,24 +78,23 @@
                     $pop.removeClass("show");
                 }
 
-                $(".wrapper img , .rule, .btn-cnt .btn-vip")
+                $(".right-side .tpl").addClass("hidden");
+
+                $(".wrapper img , .rule, .btn-cnt .btn")
                 .removeClass("mouse-click")
                 .filter(this)
                 .addClass("mouse-click");
 
-
                 if($this.hasClass("rule")){
                     clickRoleTitle();
-                }else if($this.hasClass("btn-vip")){
+                }else if($this.hasClass("btn")){
                     clickRegisterButton();
                 }else{
                     clickImage($this);
                 }
-
-                //console.log(cache);
             });
 
-            $(".pop-con .cnt p").dblclick(function (){
+/*            $(".pop-con .cnt p").dblclick(function (){
                 if(!$(this).find(".tempInput").length){
                     var $this = $(this);
                     var bakText = $this.text();
@@ -114,22 +107,32 @@
                         }
                         $this.empty().text(changeText);
                     });
-
                 }
+            });*/
+
+            $(".close").click(function(){                
+                $(".pop , .pop-con").removeClass("show");
             });
 
+            $(".defaultSetting img").click(function(){
+                var $this = $(this);
+                $(".right-side .uploaderIconContainer").empty().append($("#img-reset-tpl").text());
+                uploadimg('' , function( file ) {                                        
+                    var newImgSrc = "generate/images/" + $("#fileList .info:last").text();
+                    $this.prop("src" , newImgSrc);                    
+                });
+            });
         });
-
-
-
     </script>
 </head>
-<body>
+<body ng-controller="ctrl1">
     <div class="header">
+        
     </div>
     <div class="container-fluid">
         <div class="row">
-            <div class="left-side col-md-2">
+            <div class="left-side col-md-2" style="text-align:center;">
+                <button class="generate">生成</button>
             </div>
             <div class="worktai col-md-7">
                 <div class="wrapper">
@@ -146,11 +149,11 @@
                     <div class="btn-cnt">
                         <img src="resources/images/img_04.jpg" alt="" data-pos="img_04">
                         <!-- 若不可点,加类"btn-disabled" -->
-                        <a class="btn-vip" href="javascript:void(0);">注册领取</a>
+                        <a class="btn" href="javascript:void(0);">注册领取</a>
                     </div>
                     <img src="resources/images/img_05.jpg" alt="" data-pos="img_05"/>
                     <!-- 活动规则 -->
-                    <div class="rule">
+                    <div class="rule on">
                         <div class="title">活动规则</div>
                         <ul class="cnt">
                             <li>1、活动期间，成功注册的用户均可领取唯品会优惠券，每个用户仅限领用一次；</li>
@@ -164,121 +167,236 @@
                     </div>
                     <img class="block" src="resources/images/img_07.jpg" alt="" data-pos="img_07" />
                 </div>
+                <!-- 弹窗 -->
+                <div class="pop">
+                    <div class="pop-con pop-con-1">
+                        <!-- 头部 -->
+                        <div class="title">
+                            <a href="javascript:;" class="close"></a>
+                        </div>
+                        <!-- 内容区 -->
+                        <div class="cnt">
+                            <p>
+                                <img class="success-icon" src="resources/images/ico.png" alt="" />
+                                <em class="success-text">领券成功!</em>
+                            </p>
+                            <p>
+                                <span class="nocss">恭喜您已获得</span>
+                                <em class="coupon-num">60元优惠券</em>
+                            </p>
+                        </div>
+                        <!-- 脚部 -->
+                        <div class="footer">
+                            <!-- 不可点击加类“disabled” -->
+                            <a href="javascript:;" class="btn">去首页购物</a>
+                            <a href="javascript:;" class="btn">进入个人中心查看</a>
+                        </div>
+                    </div>
+                    <div class="pop-con pop-con-2">
+                        <!-- 头部 -->
+                        <div class="title">
+                            <a href="javascript:;" class="close"></a>
+                        </div>
+                        <!-- 内容区 -->
+                        <div class="cnt">
+                            <p>
+                                <em class="success-text">人潮涌涌,稍等片刻</em>
+                            </p>
+                            <p>优惠券将稍后返至您账户!</p>
+                        </div>
+                        <!-- 脚部 -->
+                        <div class="footer">
+                            <!-- 不可点击加类“disabled” -->
+                            <a href="javascript:;" class="btn">去首页购物</a>
+                        </div>
+                    </div>
+                    <div class="pop-con pop-con-3">
+                        <!-- 头部 -->
+                        <div class="title">
+                            <a href="javascript:;" class="close"></a>
+                        </div>
+                        <!-- 内容区 -->
+                        <div class="cnt">
+                            <p>您已领过券！</p>
+                            <p>不要太贪心哦~！</p>
+                        </div>
+                        <!-- 脚部 -->
+                        <div class="footer">
+                            <!-- 不可点击加类“disabled” -->
+                            <a href="javascript:;" class="btn">去首页购物</a>
+                        </div>
+                    </div>
+                    <div class="pop-con pop-con-4">
+                        <!-- 头部 -->
+                        <div class="title">
+                            <a href="javascript:;" class="close"></a>
+                        </div>
+                        <!-- 内容区 -->
+                        <div class="cnt">
+                            <p>
+                                <em class="success-text">很遗憾</em>
+                            </p>
+                            <p>此优惠券仅限移动端</p>
+                            <p>首次登陆用户领取!</p>
+                        </div>
+                        <!-- 脚部 -->
+                        <div class="footer">
+                            <!-- 不可点击加类“disabled” -->
+                            <a href="javascript:;" class="btn">去首页购物</a>
+                        </div>
+                    </div>
+                </div>                
             </div>
-            <!-- 弹窗 -->
-            <div class="pop">
-                <div class="pop-con pop-con-1">
-                    <!-- 头部 -->
-                    <div class="title">
-                        <a href="javascript:;" class="close"></a>
-                    </div>
-                    <!-- 内容区 -->
-                    <div class="cnt">
-                        <p>
-                            <img class="success-icon" src="resources/images/ico.png" alt="" />
-                            <em class="success-text">领券成功!</em>
-                        </p>
-                        <p>
-                            恭喜您已获得
-                            <em class="coupon-num">60元优惠券</em>
-                        </p>
-                    </div>
-                    <!-- 脚部 -->
-                    <div class="footer">
-                        <!-- 不可点击加类“disabled” -->
-                        <a href="javascript:;" class="btn">去首页购物</a>
-                        <a href="javascript:;" class="btn">进入个人中心查看</a>
-                    </div>
-                </div>
-                <div class="pop-con pop-con-2">
-                    <!-- 头部 -->
-                    <div class="title">
-                        <a href="javascript:;" class="close"></a>
-                    </div>
-                    <!-- 内容区 -->
-                    <div class="cnt">
-                        <p>
-                            <em class="success-text">人潮涌涌,稍等片刻</em>
-                        </p>
-                        <p>优惠券将稍后返至您账户!</p>
-                    </div>
-                    <!-- 脚部 -->
-                    <div class="footer">
-                        <!-- 不可点击加类“disabled” -->
-                        <a href="javascript:;" class="btn">去首页购物</a>
-                    </div>
-                </div>
-                <div class="pop-con pop-con-3">
-                    <!-- 头部 -->
-                    <div class="title">
-                        <a href="javascript:;" class="close"></a>
-                    </div>
-                    <!-- 内容区 -->
-                    <div class="cnt">
-                        <p>您已领过券！</p>
-                        <p>不要太贪心哦~！</p>
-                    </div>
-                    <!-- 脚部 -->
-                    <div class="footer">
-                        <!-- 不可点击加类“disabled” -->
-                        <a href="javascript:;" class="btn">去首页购物</a>
-                    </div>
-                </div>
-                <div class="pop-con pop-con-4">
-                    <!-- 头部 -->
-                    <div class="title">
-                        <a href="javascript:;" class="close"></a>
-                    </div>
-                    <!-- 内容区 -->
-                    <div class="cnt">
-                        <p>
-                            <em class="success-text">很遗憾</em>
-                        </p>
-                        <p>此优惠券仅限移动端</p>
-                        <p>首次登陆用户领取!</p>
-                    </div>
-                    <!-- 脚部 -->
-                    <div class="footer">
-                        <!-- 不可点击加类“disabled” -->
-                        <a href="javascript:;" class="btn">去首页购物</a>
-                    </div>
-                </div>
-            </div>
+            <div class="right-side col-md-3">
 
-            <div class="right-side col-md-3">                      
+                <form class="guize tpl hidden">
+                  <div class="form-group">
+                    <label for="title-color" class="col-sm-2 control-label">背景颜色</label>
+                    <input type="color" class="form-control" id="title-color" ng-model="titleColor">
+                  </div>
+                  <div class="form-group">
+                    <label for="guize-content" class="col-sm-2 control-label">内容</label>
+                    <textarea class="form-control" id="guize-content" rows="15" ng-model="guizeContent"></textarea>
+                  </div>
+                </form>
+
+                <div class="pop-window tpl hidden">
+                    
+                    <div class="form-group">
+                        <label for="popup-btn-color" class="col-sm-2 control-label">背景颜色</label>
+                        <input type="color" class="form-control" id="popup-btn-color" ng-model="popupBtnColor">
+                    </div>
+
+                    <button class="but1" value="pop-con-1">pop-con-1</button>
+                    <div class="pop1-modify-input">
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-1 .success-text">
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-1 p:eq(1) .nocss">                        
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-1 .coupon-num" >
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-1 .footer a:first" >
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-1 .footer a:last" >
+                    </div>
+                    
+                    <button class="but1" value="pop-con-2">pop-con-2</button>
+                    <div class="pop2-modify-input">
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-2 .success-text" >
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-2 .cnt p:last" >
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-2 .footer a:first">
+                    </div>
+
+
+                    <button class="but1" value="pop-con-3">pop-con-3</button>
+                    <div class="pop3-modify-input">                        
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-3 .cnt p:first" >
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-3 .cnt p:last" >
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-3 .footer a:first" >
+                    </div>
+
+
+                    <button class="but1" value="pop-con-4">pop-con-4</button>
+                    <div class="pop4-modify-input">
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-4 .success-text" >
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-4 .cnt p:eq(1)" >
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-4 .cnt p:last" >
+                        <input type="text" class="form-control poptxt" data-elemclass=".pop-con-4 .footer a:first" >
+                    </div>
+
+                </div>
+
+                <div class="uploader tpl hidden">                    
+                </div>
+
+
+                <div class="defaultSetting tpl">
+                    <div class="form-group">
+                        <label for="background-color" class="col-sm-2 control-label">背景颜色</label>
+                        <input type="color" class="form-control" ng-model="backgroundColor" >
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">规则箭头</label><br/>
+                        <img src="resources/images/arrow.png" width="32" height="32" data-elemclass=".rule .title::after" >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="background-color" class="col-sm-2 control-label">弹出窗口关闭按钮</label><br/>
+                        <img src="resources/images/close.png" width="32" height="32" data-elemclass=".pop .close">
+                    </div>
+                    <div class="form-group">
+                        <label for="background-color" class="col-sm-2 control-label">已领取图标</label><br/>
+                        <img src="resources/images/coupon_off.png" width="250" height="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="background-color" class="col-sm-2 control-label">未领取图标</label><br/>
+                        <img src="resources/images/coupon_on.png" width="250" height="100">
+                    </div>
+
+                    <div class="uploaderIconContainer">
+                        
+                    </div>
+                                                                                
+                </div>
+
             </div>
         </div>
     </div>
 
     <script id="img-reset-tpl" type="text/template">
-        <div id="uploader">
-            <div id="fileList" class="uploader-list hidden"></div>
-            <div id="filePicker">选择图片</div>
-        </div>
+        <div id="fileList" class="uploader-list"></div>
+        <div id="filePicker">选择图片</div>
     </script> 
 
-    <script id="guize-reset-tpl" type="text/template">
-        <form class="form-horizontal guize">
-          <div class="form-group">
-            <label for="title-color" class="col-sm-2 control-label">背景颜色</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" id="title-color" >
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="guize-content" class="col-sm-2 control-label">内容</label>
-            <div class="col-sm-10">
-              <textarea class="form-control" id="guize-content" rows="15"></textarea>
-            </div>
-          </div>
-        </form>
-    </script> 
 
-    <script id="pop-reset-tpl" type="text/template">
-        <button class="but1" value="pop-con-1">pop-con-1</button>
-        <button class="but1" value="pop-con-2">pop-con-2</button>
-        <button class="but1" value="pop-con-3">pop-con-3</button>
-        <button class="but1" value="pop-con-4">pop-con-4</button>
+
+    <script type="text/javascript">
+
+        (function initPopupWindowContent(){
+
+            $(".poptxt").each(function (_, elem){                
+                elem.value = $($(elem).data("elemclass")).text();                
+            });
+
+            $(".poptxt").keyup(function(){
+                var newVal = $(this).val();
+                var selector = $(this).data("elemclass");
+                $(selector).text(newVal);
+            });
+            
+        })();
+
+
+        var myApp = angular.module('myApp', []);
+        myApp.controller('ctrl1', ['$scope', '$http', function($scope, $http) {            
+            $scope.$watch('titleColor', function () {
+                $(".rule .title").css("background-color" , $scope.titleColor);
+            });
+
+            $scope.$watch('guizeContent', function () {
+
+                if(!$scope.guizeContent){
+                    return ;
+                }
+                var rules = ($scope.guizeContent).split("\n");                
+                var x = rules.join("</li><li>");
+                console.log(x);
+                $(".rule .cnt").empty().append("<li>" +  rules.join("</li><li>") + "</li>");
+
+            });
+
+            
+
+            $scope.$watch('popupBtnColor', function () {
+                $(".btn").css({
+                    "background-color" : $scope.popupBtnColor,
+                    "box-shadow" : "1px 2px 0 0 " + $scope.popupBtnColor
+                });
+                
+            });   
+
+            $scope.$watch('backgroundColor', function () {
+                $(".wrapper").css("background-color" , $scope.backgroundColor);                
+            });        
+            
+        }]);
+
     </script>
 </body>
 </html>

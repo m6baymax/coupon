@@ -4,13 +4,14 @@ body {
     color: #000;
 }
 
-body {
+/* body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
-    line-height: .96rem;
+ line-height: .96rem;
     color: #333;
     background-color: #fff;
-}
+    margin: 0 2%;
+} */
 
 .header {
     height: 65px;
@@ -24,19 +25,26 @@ body {
 .left-side {
     background-color: #ccc;
     height: 100%;
+    float: left;
+    width: 20%;
 }
 
 .right-side {
     background-color: #ccc;
     height: 100%;
+    float: left;
+    width: 19%;
+    position: relative;
+    z-index: 1024;
+    padding-left: 1%;
+    padding-bottom: 2%;
 }
-
-.worktai .wrapper {
-    overflow-y: visible;
-    padding: 50px;
+.worktai {
+    float: left;
+    width: 60%;
 }
-
 .wrapper {
+    padding: 50px;
     background-color: #9d155a;
 }
 
@@ -46,4 +54,12 @@ body {
 
 .pop.show , .pop .show{
     display: block;
+}
+
+.hidden{
+    display: none;
+}
+
+.uploaderIconContainer img ,.uploader-list .info{
+    display: none;
 }

@@ -1,7 +1,7 @@
 
 function uploadimg( option , success , error) {
     var $ = jQuery,
-        $list = $('#fileList'),
+        $list = $('.uploader-list'),
         // 优化retina, 在retina下这个值是2
         ratio = window.devicePixelRatio || 1,
 
