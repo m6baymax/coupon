@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
@@ -33,51 +32,98 @@
             
             $(document).resize(setRootFontSize).load(setRootFontSize).resize();
 
-            //规则打开
-            $(".rule .title").click(function() {
+            function clickRegisterButton(){
+                $(".right-side").empty().append($("#pop-reset-tpl").text());
+
+                $(".but1").click(function(){
+                    $(".pop").addClass("show");
+                    $(".pop-con").removeClass("show");
+                    $("." + $(this).val() ).addClass("show");
+                });
+
+            }            
+
+            function clickRoleTitle(){
                 $(".rule").toggleClass("on");
-            });
+                $(".right-side").empty().append($("#guize-reset-tpl").text());
+                
+                var rules = $(".rule li");
+                var ruleString="";
+                $(".rule li").each(function(_, elem){
+                    ruleString += $(elem).text().replace(/^\s*/ , "")+"\r\n";
+                });
 
+                $("#guize-content").val(ruleString);
+            }
 
+            function clickImage($this){
+                
+                $(".right-side").empty().append($("#img-reset-tpl").text());  
+                uploadimg('' , function( file ) {
+                    $( '#'+file.id ).addClass('upload-state-done');
+                    var oldImgSrc = $this.prop("src");
+                    var imgPosition = $this.data("pos");
+                    var newImgSrc = "generate/images/" + $("#fileList .info:last").text();
 
-            var cache = {};
+                    /*cache[imgPosition] = {
+                        "oldImgSrc":oldImgSrc,
+                        "newImgSrc":newImgSrc
+                    };*/
+                    $this.prop("src" , newImgSrc);
+                });
+            }
+
+            //var cache = {};
 
             $(".worktai")
-            .on("click", ".wrapper img , .btn-cnt .btn-vip , .rule", function(e) {
+            .on("click", ".wrapper img , .rule , .btn-cnt .btn-vip", function(e) {
 
                 var $this = $(this);
-                
-                if(!$this.hasClass("mouse-hover-img")){
-                    $(".right-side").empty().append($("#img-reset-tpl").text());
-                    $(".worktai img").removeClass("mouse-hover-img").filter(this).addClass("mouse-hover-img");
-                    
-                    
-                    uploadimg( '' , function( file ) {
-                        $( '#'+file.id ).addClass('upload-state-done');
-                        var oldImgSrc= $this.prop("src");
-                        //var oldImgSrcName = oldImgSrc.substring( oldImgSrc.lastIndexOf('/') + 1 );
-                        var imgPosition = $this.data("pos");
-                        var newImgSrc = "generate/images/" + $("#fileList .info:last").text();
+                var $pop = $(".pop");
+                if($pop.hasClass("show")){
+                    $pop.removeClass("show");
+                }
 
-                        cache[imgPosition] = {
-                            "oldImgSrc":oldImgSrc,
-                            "newImgSrc":newImgSrc
-                        };
-                        $this.prop("src" , newImgSrc);
+                $(".wrapper img , .rule, .btn-cnt .btn-vip")
+                .removeClass("mouse-click")
+                .filter(this)
+                .addClass("mouse-click");
 
-                        console.log(cache);
-                    });
+
+                if($this.hasClass("rule")){
+                    clickRoleTitle();
+                }else if($this.hasClass("btn-vip")){
+                    clickRegisterButton();
                 }else{
-                    $this.removeClass("mouse-hover-img");
+                    clickImage($this);
+                }
+
+                //console.log(cache);
+            });
+
+            $(".pop-con .cnt p").dblclick(function (){
+                if(!$(this).find(".tempInput").length){
+                    var $this = $(this);
+                    var bakText = $this.text();
+                    $this.text("");
+                    $this.append("<input type='text' style='width: 300px;' class='tempInput' value='"+ bakText +"'/><button class='save'>保存</button>");
+                    $this.find(".save").click(function(){
+                        var changeText = $this.find(".tempInput").val();
+                        if(!changeText){
+                            changeText = bakText;
+                        }
+                        $this.empty().text(changeText);
+                    });
+
                 }
             });
+
         });
 
 
+
     </script>
-
 </head>
-
 <body>
     <div class="header">
     </div>
@@ -119,6 +165,86 @@
                     <img class="block" src="resources/images/img_07.jpg" alt="" data-pos="img_07" />
                 </div>
             </div>
+            <!-- 弹窗 -->
+            <div class="pop">
+                <div class="pop-con pop-con-1">
+                    <!-- 头部 -->
+                    <div class="title">
+                        <a href="javascript:;" class="close"></a>
+                    </div>
+                    <!-- 内容区 -->
+                    <div class="cnt">
+                        <p>
+                            <img class="success-icon" src="resources/images/ico.png" alt="" />
+                            <em class="success-text">领券成功!</em>
+                        </p>
+                        <p>
+                            恭喜您已获得
+                            <em class="coupon-num">60元优惠券</em>
+                        </p>
+                    </div>
+                    <!-- 脚部 -->
+                    <div class="footer">
+                        <!-- 不可点击加类“disabled” -->
+                        <a href="javascript:;" class="btn">去首页购物</a>
+                        <a href="javascript:;" class="btn">进入个人中心查看</a>
+                    </div>
+                </div>
+                <div class="pop-con pop-con-2">
+                    <!-- 头部 -->
+                    <div class="title">
+                        <a href="javascript:;" class="close"></a>
+                    </div>
+                    <!-- 内容区 -->
+                    <div class="cnt">
+                        <p>
+                            <em class="success-text">人潮涌涌,稍等片刻</em>
+                        </p>
+                        <p>优惠券将稍后返至您账户!</p>
+                    </div>
+                    <!-- 脚部 -->
+                    <div class="footer">
+                        <!-- 不可点击加类“disabled” -->
+                        <a href="javascript:;" class="btn">去首页购物</a>
+                    </div>
+                </div>
+                <div class="pop-con pop-con-3">
+                    <!-- 头部 -->
+                    <div class="title">
+                        <a href="javascript:;" class="close"></a>
+                    </div>
+                    <!-- 内容区 -->
+                    <div class="cnt">
+                        <p>您已领过券！</p>
+                        <p>不要太贪心哦~！</p>
+                    </div>
+                    <!-- 脚部 -->
+                    <div class="footer">
+                        <!-- 不可点击加类“disabled” -->
+                        <a href="javascript:;" class="btn">去首页购物</a>
+                    </div>
+                </div>
+                <div class="pop-con pop-con-4">
+                    <!-- 头部 -->
+                    <div class="title">
+                        <a href="javascript:;" class="close"></a>
+                    </div>
+                    <!-- 内容区 -->
+                    <div class="cnt">
+                        <p>
+                            <em class="success-text">很遗憾</em>
+                        </p>
+                        <p>此优惠券仅限移动端</p>
+                        <p>首次登陆用户领取!</p>
+                    </div>
+                    <!-- 脚部 -->
+                    <div class="footer">
+                        <!-- 不可点击加类“disabled” -->
+                        <a href="javascript:;" class="btn">去首页购物</a>
+                    </div>
+                </div>
+            </div>
+
             <div class="right-side col-md-3">                      
             </div>
         </div>
@@ -130,6 +256,29 @@
             <div id="filePicker">选择图片</div>
         </div>
     </script> 
+
+    <script id="guize-reset-tpl" type="text/template">
+        <form class="form-horizontal guize">
+          <div class="form-group">
+            <label for="title-color" class="col-sm-2 control-label">背景颜色</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="title-color" >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="guize-content" class="col-sm-2 control-label">内容</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" id="guize-content" rows="15"></textarea>
+            </div>
+          </div>
+        </form>
+    </script> 
+
+    <script id="pop-reset-tpl" type="text/template">
+        <button class="but1" value="pop-con-1">pop-con-1</button>
+        <button class="but1" value="pop-con-2">pop-con-2</button>
+        <button class="but1" value="pop-con-3">pop-con-3</button>
+        <button class="but1" value="pop-con-4">pop-con-4</button>
+    </script>
 </body>
 </html>
-

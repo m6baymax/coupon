@@ -32,8 +32,6 @@ body {
 }
 
 .worktai .wrapper {
-    /*  width: 420px; */
-    /* overflow-y: scroll; */
     overflow-y: visible;
     padding: 50px;
 }
@@ -42,6 +40,10 @@ body {
     background-color: #9d155a;
 }
 
-.mouse-hover-img {
+.mouse-click {
     border: 3px dotted #ccc;
+}
+
+.pop.show , .pop .show{
+    display: block;
 }
