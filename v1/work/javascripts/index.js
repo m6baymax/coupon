@@ -123,7 +123,6 @@ function uploadimg( option , success , error) {
     }   
 
     function clickRoleTitle(){
-        //$(".rule").toggleClass("on");
         $(".right-side .guize").removeClass("hidden");
         
         var rules = $(".rule li");
@@ -141,13 +140,12 @@ function uploadimg( option , success , error) {
             $( '#'+file.id ).addClass('upload-state-done');
             var oldImgSrc = $this.prop("src");
             var imgPosition = $this.data("pos");
-            var newImgSrc = "generate/images/" + $("#fileList .info:last").text();
+            var newImgSrc = "generate/resources/images/" + $("#fileList .info:last").text();
             $this.prop("src" , newImgSrc);
             $("#fileList").find(".smallimg").remove();
         });
 
         $(".uploader-list").append("<img class='smallimg' width=100 height=100 src='"+ $this.prop("src") +"'>");
-
     }
 
     $(".worktai")
@@ -160,7 +158,6 @@ function uploadimg( option , success , error) {
         }
 
         $(".right-side .tpl").addClass("hidden");
-
         $(".wrapper img , .rule, .btn-cnt .btn")
         .removeClass("mouse-click")
         .filter(this)
@@ -183,11 +180,11 @@ function uploadimg( option , success , error) {
         var $this = $(this);
         $(".right-side .uploaderIconContainer").empty().append($("#img-reset-tpl").text());
         uploadimg('' , function( file ) {                                        
-            var newImgSrc = "generate/images/" + $("#fileList .info:last").text();
-            $this.prop("src" , newImgSrc);                    
+            var newImgSrc = "generate/resources/images/" + $("#fileList .info:last").text();
+            $this.prop("src" , newImgSrc);  
+            $(".right-side .uploaderIconContainer").empty();                  
         });
     });
-
 
     $(".poptxt").each(function (_, elem){                
         elem.value = $($(elem).data("elemclass")).text();                
@@ -209,29 +206,47 @@ myApp.controller('ctrl1', ['$scope', '$http', function($scope, $http) {
     });
 
     $scope.$watch('guizeContent', function () {
-
         if(!$scope.guizeContent){
             return ;
         }
         var rules = ($scope.guizeContent).split("\n");                
-        var x = rules.join("</li><li>");
-        console.log(x);
         $(".rule .cnt").empty().append("<li>" +  rules.join("</li><li>") + "</li>");
-
     });
-
-    
 
     $scope.$watch('popupBtnColor', function () {
         $(".btn").css({
             "background-color" : $scope.popupBtnColor,
             "box-shadow" : "1px 2px 0 0 " + $scope.popupBtnColor
-        });
-        
+        });        
     });   
 
     $scope.$watch('backgroundColor', function () {
         $(".wrapper").css("background-color" , $scope.backgroundColor);                
-    });        
-    
+    });
+
 }]);
+
+
+$("#create").click(function(){
+    
+    $("#result-report").html("");
+    $("#create").text("生成中...");
+    $("#result").addClass("waiting").removeClass("success");
+        
+    setTimeout(function(){     
+        $.ajax({
+            url:"../index.php",
+            method: "post",
+            data:{ tpl : $(".worktai").html() },
+            dataType:"json",
+            success :function(e){
+                $("#result").removeClass("waiting").addClass("success");
+                $("#result-download").attr("href", e.file).html(e.name);
+                $("#result-url").prop("href", e.path+"/tefile/coupon.html");
+                $("#result-mark-img").prop("src", e.path+"/qrcode.png");
+                $("#result-report").html("生成完毕，左侧可扫码预览。");
+                $("#create").text("生 成");
+            }
+        });
+    }, 20);
+});

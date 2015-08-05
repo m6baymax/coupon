@@ -8,8 +8,9 @@
     <meta content="telephone=no" name="format-detection">
     <title>唯品会</title>
     <link rel="stylesheet" href="stylesheets/style.css" />
-    <link rel="stylesheet" type="text/css" href="diyUpload/css/webuploader.css">
-    <link rel="stylesheet" type="text/css" href="stylesheets/index.css">
+    <link rel="stylesheet" href="diyUpload/css/webuploader.css">
+    <link rel="stylesheet" href="stylesheets/index.css">
+    <link rel="stylesheet" href="sys/hookcut.css" >
 </head>
 <body ng-controller="ctrl1">
     <div class="header">
@@ -18,7 +19,19 @@
     <div class="container-fluid">
         <div class="row">
             <div class="left-side col-md-2" style="text-align:center;">
-                <button class="generate">生成</button>
+
+            <div id="result">
+                <div class="result-mark"><img id="result-mark-img"></div>
+                <div id="result-report"></div>
+                <a id="result-download"></a>
+                <div class="cl"></div>
+                <a id="result-url" target="_blank">浏览器打开链接</a> 
+            </div>
+            <div class="but-create-div">
+                <button id="create" type="button">生 成</button>
+            </div>
+            
+
             </div>
             <div class="worktai col-md-7">
                 <div class="wrapper">
@@ -230,7 +243,7 @@
         <div id="filePicker">选择图片</div>
     </script> 
 
-    <script src="javascripts/jquery-1.11.3.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="javascripts/jquery-1.11.3.js" charset="utf-8"></script>
     <script type="text/javascript" src="diyUpload/js/webuploader.html5only.min.js"></script>
     <script type="text/javascript" src="javascripts/angular.js"></script>
     <script type="text/javascript" src="javascripts/index.js"></script>

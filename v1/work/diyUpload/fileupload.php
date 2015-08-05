@@ -52,7 +52,7 @@ usleep(5000);
 // Settings
 // $targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
 $targetDir = 'upload_tmp';
-$uploadDir = '../generate/images';
+$uploadDir = '../generate/resources/images';
 
 $cleanupTargetDir = true; // Remove old files
 $maxFileAge = 5 * 3600; // Temp file age in seconds
