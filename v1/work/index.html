@@ -30,27 +30,27 @@
             <div class="but-create-div">
                 <button id="create" type="button">生 成</button>
             </div>
-            
+
 
             </div>
             <div class="worktai col-md-7">
                 <div class="wrapper">
                     <!-- banner位 -->
                     <div class="banner">
-                        <img src="resources/images/img_01.jpg" alt="" data-pos="img_01" />
-                        <img src="resources/images/img_02.jpg" alt="" data-pos="img_02" />
+                        <img src="resources/images/img_01.jpg" alt="" />
+                        <img src="resources/images/img_02.jpg" alt="" />
                     </div>
                     <!-- 优惠券。如果已经领取，变类“on”为“off” -->
                     <div class="coupon on">
-                        <img src="resources/images/img_03.jpg" alt="" data-pos="img_03">
+                        <img src="resources/images/img_03.jpg" alt="">
                     </div>
                     <!-- 领取按钮 -->
                     <div class="btn-cnt">
-                        <img src="resources/images/img_04.jpg" alt="" data-pos="img_04">
+                        <img src="resources/images/img_04.jpg" alt="">
                         <!-- 若不可点,加类"btn-disabled" -->
                         <a class="btn" href="javascript:void(0);">注册领取</a>
                     </div>
-                    <img src="resources/images/img_05.jpg" alt="" data-pos="img_05"/>
+                    <img src="resources/images/img_05.jpg" alt=""/>
                     <!-- 活动规则 -->
                     <div class="rule on">
                         <div class="title">活动规则</div>
@@ -64,7 +64,7 @@
                             <li>7、唯品会在法律法规允许范围可对本活动进行解释。</li>
                         </ul>
                     </div>
-                    <img class="block" src="resources/images/img_07.jpg" alt="" data-pos="img_07" />
+                    <img class="block" src="resources/images/img_07.jpg" alt="" />
                 </div>
                 <!-- 弹窗 -->
                 <div class="pop">
@@ -150,12 +150,20 @@
 
                 <form class="guize tpl hidden">
                   <div class="form-group">
-                    <label for="title-color" class="col-sm-2 control-label">背景颜色</label>
+                    <label for="title-color" class="col-sm-2 control-label">活动规则背景颜色</label>
                     <input type="color" class="form-control" id="title-color" ng-model="titleColor">
                   </div>
                   <div class="form-group">
+                    <label for="act-guize-color" class="col-sm-2 control-label">活动规则字体颜色</label>
+                    <input type="color" class="form-control" id="act-guize-color" ng-model="actGuizeColor">
+                  </div>
+                  <div class="form-group">
+                    <label for="act-font-color" class="col-sm-2 control-label">规则规则条款字体颜色</label>
+                    <input type="color" class="form-control" id="act-font-color" ng-model="actFontColor">
+                  </div>
+                  <div class="form-group">
                     <label for="guize-content" class="col-sm-2 control-label">内容</label>
-                    <textarea class="form-control" id="guize-content" rows="15" ng-model="guizeContent"></textarea>
+                    <textarea class="form-control" id="guize-content" rows="25"  style="width:80%;" ng-model="guizeContent"></textarea>
                   </div>
                 </form>
 
@@ -165,7 +173,6 @@
                         <label for="popup-btn-color" class="col-sm-2 control-label">背景颜色</label>
                         <input type="color" class="form-control" id="popup-btn-color" ng-model="popupBtnColor">
                     </div>
-
                     <button class="but1" value="pop-con-1">pop-con-1</button>
                     <div class="pop1-modify-input">
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-1 .success-text">
@@ -173,24 +180,19 @@
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-1 .coupon-num" >
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-1 .footer a:first" >
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-1 .footer a:last" >
-                    </div>
-                    
+                    </div>                    
                     <button class="but1" value="pop-con-2">pop-con-2</button>
                     <div class="pop2-modify-input">
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-2 .success-text" >
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-2 .cnt p:last" >
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-2 .footer a:first">
                     </div>
-
-
                     <button class="but1" value="pop-con-3">pop-con-3</button>
                     <div class="pop3-modify-input">                        
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-3 .cnt p:first" >
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-3 .cnt p:last" >
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-3 .footer a:first" >
                     </div>
-
-
                     <button class="but1" value="pop-con-4">pop-con-4</button>
                     <div class="pop4-modify-input">
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-4 .success-text" >
@@ -198,12 +200,10 @@
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-4 .cnt p:last" >
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-4 .footer a:first" >
                     </div>
-
                 </div>
 
                 <div class="uploader tpl hidden">                    
                 </div>
-
 
                 <div class="defaultSetting tpl">
                     <div class="form-group">
@@ -212,26 +212,22 @@
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">规则箭头</label><br/>
-                        <img src="resources/images/arrow.png" width="32" height="32" data-elemclass=".rule .title::after" >
+                        <img src="resources/images/arrow.png" width="32" height="32" data-imgtype="arrow" >
                     </div>
-
                     <div class="form-group">
                         <label for="background-color" class="col-sm-2 control-label">弹出窗口关闭按钮</label><br/>
-                        <img src="resources/images/close.png" width="32" height="32" data-elemclass=".pop .close">
+                        <img src="resources/images/close.png" width="32" height="32" data-imgtype="close">
                     </div>
                     <div class="form-group">
                         <label for="background-color" class="col-sm-2 control-label">已领取图标</label><br/>
-                        <img src="resources/images/coupon_off.png" width="250" height="100">
+                        <img src="resources/images/coupon_off.png" width="250" height="100" data-imgtype="coupon_off">
                     </div>
                     <div class="form-group">
                         <label for="background-color" class="col-sm-2 control-label">未领取图标</label><br/>
-                        <img src="resources/images/coupon_on.png" width="250" height="100">
+                        <img src="resources/images/coupon_on.png" width="250" height="100" data-imgtype="coupon_on">
                     </div>
-
                     <div class="uploaderIconContainer">
-                        
-                    </div>
-                                                                                
+                    </div>                                                                                
                 </div>
 
             </div>
@@ -241,8 +237,7 @@
     <script id="img-reset-tpl" type="text/template">
         <div id="fileList" class="uploader-list"></div>
         <div id="filePicker">选择图片</div>
-    </script> 
-
+    </script>
     <script type="text/javascript" src="javascripts/jquery-1.11.3.js" charset="utf-8"></script>
     <script type="text/javascript" src="diyUpload/js/webuploader.html5only.min.js"></script>
     <script type="text/javascript" src="javascripts/angular.js"></script>

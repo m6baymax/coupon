@@ -96,8 +96,9 @@ function uploadimg( option , success , error) {
     });
 }
 
+var imgCache = {};
 
- $(function() {
+$(function() {
 
     // 设置根字体大小            
     setRootFontSize = function() {
@@ -178,11 +179,13 @@ function uploadimg( option , success , error) {
 
     $(".defaultSetting img").click(function(){
         var $this = $(this);
+        var imgType = $this.data("imgtype");
         $(".right-side .uploaderIconContainer").empty().append($("#img-reset-tpl").text());
         uploadimg('' , function( file ) {                                        
             var newImgSrc = "generate/resources/images/" + $("#fileList .info:last").text();
-            $this.prop("src" , newImgSrc);  
-            $(".right-side .uploaderIconContainer").empty();                  
+            $this.prop("src" , newImgSrc);               
+            imgCache[imgType] = $("#fileList .info:last").text();
+            $(".right-side .uploaderIconContainer").empty(); 
         });
     });
 
@@ -224,6 +227,14 @@ myApp.controller('ctrl1', ['$scope', '$http', function($scope, $http) {
         $(".wrapper").css("background-color" , $scope.backgroundColor);                
     });
 
+    $scope.$watch('actGuizeColor', function () {
+        $(".rule .title").css("color" , $scope.actGuizeColor);                
+    });
+
+    $scope.$watch('actFontColor', function () {
+        $(".rule .cnt").css("color" , $scope.actFontColor);                
+    });
+
 }]);
 
 
@@ -232,12 +243,21 @@ $("#create").click(function(){
     $("#result-report").html("");
     $("#create").text("生成中...");
     $("#result").addClass("waiting").removeClass("success");
+
+    var htmlContent = $(".worktai").html();
+    htmlContent = htmlContent.replace(/generate\/(.*\.(jpg|png))/ig , "$1");
+    var backgroundColor = $(".wrapper").css("background-color");
         
     setTimeout(function(){     
         $.ajax({
             url:"../index.php",
             method: "post",
-            data:{ tpl : $(".worktai").html() },
+            data:{ tpl : htmlContent , bgColor:backgroundColor , 
+                arrow:imgCache["arrow"]||'arrow.png',
+                close:imgCache["close"]||'close.png',
+                coupon_off:imgCache["coupon_off"]||'coupon_off.png',
+                coupon_on:imgCache["coupon_on"]||'coupon_on.png',
+            },
             dataType:"json",
             success :function(e){
                 $("#result").removeClass("waiting").addClass("success");

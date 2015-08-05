@@ -42,6 +42,8 @@ body {
 .worktai {
     float: left;
     width: 55%;
+    transform: scale(.5);
+    transform-origin: 50% 0;    
 }
 .wrapper {
     padding: 50px;
