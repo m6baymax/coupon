@@ -13,25 +13,14 @@
     <link rel="stylesheet" href="sys/hookcut.css" >
 </head>
 <body ng-controller="ctrl1">
-    <div class="header">
-        
+    <div class="header f-clrfix">
+        <a href="/" class="m-logo f-fl"></a>
     </div>
-    <div class="container-fluid">
+
+    <div class="container-fluid f-clrfix">
         <div class="row">
             <div class="left-side col-md-2" style="text-align:center;">
-
-            <div id="result">
-                <div class="result-mark"><img id="result-mark-img"></div>
-                <div id="result-report"></div>
-                <a id="result-download"></a>
-                <div class="cl"></div>
-                <a id="result-url" target="_blank">浏览器打开链接</a> 
-            </div>
-            <div class="but-create-div">
-                <button id="create" type="button">生 成</button>
-            </div>
-
-
+                &nbsp;
             </div>
             <div class="worktai col-md-7">
                 <div class="wrapper">
@@ -150,30 +139,34 @@
 
                 <form class="guize tpl hidden">
                   <div class="form-group">
-                    <label for="title-color" class="col-sm-2 control-label">活动规则背景颜色</label>
+                    <label for="title-color" class="col-sm-2 control-label lang-label">活动规则背景颜色</label>
                     <input type="color" class="form-control" id="title-color" ng-model="titleColor">
                   </div>
                   <div class="form-group">
-                    <label for="act-guize-color" class="col-sm-2 control-label">活动规则字体颜色</label>
+                    <label for="act-guize-color" class="col-sm-2 control-label lang-label">活动规则字体颜色</label>
                     <input type="color" class="form-control" id="act-guize-color" ng-model="actGuizeColor">
                   </div>
                   <div class="form-group">
-                    <label for="act-font-color" class="col-sm-2 control-label">规则规则条款字体颜色</label>
+                    <label for="act-font-color" class="col-sm-2 control-label lang-label">规则规则条款字体颜色</label>
                     <input type="color" class="form-control" id="act-font-color" ng-model="actFontColor">
                   </div>
                   <div class="form-group">
                     <label for="guize-content" class="col-sm-2 control-label">内容</label>
-                    <textarea class="form-control" id="guize-content" rows="25"  style="width:80%;" ng-model="guizeContent"></textarea>
+                    <textarea class="form-control" id="guize-content" rows="25"  style="width:100%;" ng-model="guizeContent"></textarea>
                   </div>
                 </form>
 
                 <div class="pop-window tpl hidden">
                     
                     <div class="form-group">
-                        <label for="popup-btn-color" class="col-sm-2 control-label">背景颜色</label>
+                        <label for="popup-btn-color" class="col-sm-2 control-label">按钮背景颜色</label>
                         <input type="color" class="form-control" id="popup-btn-color" ng-model="popupBtnColor">
                     </div>
-                    <button class="but1" value="pop-con-1">pop-con-1</button>
+                    <div class="form-group">
+                        <label for="popup-btn-font-color" class="col-sm-2 control-label">按钮字体颜色</label>
+                        <input type="color" class="form-control" id="popup-btn-font-color" ng-model="popupBtnFontColor">
+                    </div>
+                    <button class="but1" value="pop-con-1">弹出框1</button>
                     <div class="pop1-modify-input">
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-1 .success-text">
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-1 p:eq(1) .nocss">                        
@@ -181,19 +174,19 @@
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-1 .footer a:first" >
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-1 .footer a:last" >
                     </div>                    
-                    <button class="but1" value="pop-con-2">pop-con-2</button>
+                    <button class="but1" value="pop-con-2">弹出框2</button>
                     <div class="pop2-modify-input">
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-2 .success-text" >
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-2 .cnt p:last" >
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-2 .footer a:first">
                     </div>
-                    <button class="but1" value="pop-con-3">pop-con-3</button>
+                    <button class="but1" value="pop-con-3">弹出框3</button>
                     <div class="pop3-modify-input">                        
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-3 .cnt p:first" >
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-3 .cnt p:last" >
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-3 .footer a:first" >
                     </div>
-                    <button class="but1" value="pop-con-4">pop-con-4</button>
+                    <button class="but1" value="pop-con-4">弹出框4</button>
                     <div class="pop4-modify-input">
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-4 .success-text" >
                         <input type="text" class="form-control poptxt" data-elemclass=".pop-con-4 .cnt p:eq(1)" >
@@ -207,27 +200,43 @@
 
                 <div class="defaultSetting tpl">
                     <div class="form-group">
-                        <label for="background-color" class="col-sm-2 control-label">背景颜色</label>
-                        <input type="color" class="form-control" ng-model="backgroundColor" >
+                        <label for="app-name" class="col-sm-2 control-label">应用名称</label>
+                        <input type="text" class="form-control" id="appName" >
+                    </div>
+                    <div class="form-group">
+                        <label for="background-color" class="col-sm-2 control-label">整体背景颜色</label>
+                        <input type="color" class="form-control" id='background-color' ng-model="backgroundColor" >
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">规则箭头</label><br/>
                         <img src="resources/images/arrow.png" width="32" height="32" data-imgtype="arrow" >
                     </div>
                     <div class="form-group">
-                        <label for="background-color" class="col-sm-2 control-label">弹出窗口关闭按钮</label><br/>
+                        <label class="col-sm-2 control-label lang-label">弹出窗口关闭按钮</label><br/>
                         <img src="resources/images/close.png" width="32" height="32" data-imgtype="close">
                     </div>
                     <div class="form-group">
-                        <label for="background-color" class="col-sm-2 control-label">已领取图标</label><br/>
+                        <label class="col-sm-2 control-label">已领取图标</label><br/>
                         <img src="resources/images/coupon_off.png" width="250" height="100" data-imgtype="coupon_off">
                     </div>
                     <div class="form-group">
-                        <label for="background-color" class="col-sm-2 control-label">未领取图标</label><br/>
+                        <label class="col-sm-2 control-label">未领取图标</label><br/>
                         <img src="resources/images/coupon_on.png" width="250" height="100" data-imgtype="coupon_on">
                     </div>
                     <div class="uploaderIconContainer">
-                    </div>                                                                                
+                    </div> 
+
+                    <div class="but-create-div">
+                        <button id="create" type="button">生 成</button>
+                    </div>
+                    <div id="result">
+                        <div class="result-mark"><img id="result-mark-img"></div>
+                        <div id="result-report"></div>
+                        <a id="result-download"></a>
+                        <div class="cl"></div>
+                        <a id="result-url" target="_blank">浏览器打开链接</a> 
+                    </div>
+
                 </div>
 
             </div>

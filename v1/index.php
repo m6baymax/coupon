@@ -33,11 +33,13 @@ $arrow = $_POST["arrow"];
 $close = $_POST["close"];
 $coupon_off = $_POST["coupon_off"];
 $coupon_on = $_POST["coupon_on"];
+$app_name = $_POST["appName"];
 
 
 $file_temp = file_get_contents("work/resources/coupon.html");
 $file_temp = preg_replace("/{COUPON_USERSET_CONTENT}/", $tpl , $file_temp);
 $file_temp = preg_replace("/{BODY_BACKGROUND_COLOR}/", $bg_color , $file_temp);
+$file_temp = preg_replace("/{APP_NAME}/", $app_name , $file_temp);
 file_put_contents($folder."/tefile/coupon.html", $file_temp);
 $file_temp = file_get_contents($folder."/tefile/coupon.html");
 

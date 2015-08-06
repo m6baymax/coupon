@@ -83,7 +83,7 @@ html,body{-webkit-user-select:none;}
 	} /* 横向滚动条和纵向滚动条相交处尖角的颜色 */
 
 
-#create { display: block; margin: 10px 10px 10px 0;border:none; padding: 10px 60px; font-size:20px; background:#f10582; border-bottom: 4px solid #bd1067; color: #fff;
+#create { display: block; margin: 10px 10px 10px 0; border:none; padding: 10px 60px; font-size:20px; background:#f10582; border-bottom: 4px solid #bd1067; color: #fff;
 -webkit-border-radius: 4px;
 -moz-border-radius: 4px;
 border-radius: 4px;
@@ -95,7 +95,7 @@ cursor: pointer;
 .result-mark{float:left;width:100px;height:100px;margin-right:10px;}
 #result-mark-img{display:block;width:100%;height:100%;visibility:hidden;}
 #result-mark-img[src]{visibility:visible;}
-#result-report{float:left;overflow:hidden;width:350px;max-height:50px;font:20px/50px "Microsoft YaHei";}
+#result-report{float:left;overflow:hidden;/* width:350px; */max-height:50px;font:20px/50px "Microsoft YaHei";vertical-align: top;}
 #result-download{display:none; float:left;width:350px;max-height:50px;font:16px/50px "Microsoft YaHei";/* color:#ccc!important; */-webkit-transform-origin:55% 78%;}
 #result-download::before{content:'';float:left;width:50px;height:50px;background:url(icon_zip.png) no-repeat center;background-size:100%;/* color:#ccc; */}
 /*.waiting #result-download{display:none;}*/

@@ -87,7 +87,6 @@ if (isset($_REQUEST["md5"]) && array_search($_REQUEST["md5"], $md5File ) !== FAL
 $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
 $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
 
-echo $filePath .' '.$uploadPath ;
 // Chunking might be enabled
 $chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
 $chunks = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 1;
@@ -117,6 +116,7 @@ if ($cleanupTargetDir) {
 
 echo var_dump($_FILES);
 // Open temp file
+
 if (!$out = @fopen("{$filePath}_{$chunk}.parttmp", "wb")) {
     die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
 }
@@ -143,6 +143,7 @@ while ($buff = fread($in, 4096)) {
 @fclose($out);
 @fclose($in);
 
+
 rename("{$filePath}_{$chunk}.parttmp", "{$filePath}_{$chunk}.part");
 
 $index = 0;
@@ -155,6 +156,7 @@ for( $index = 0; $index < $chunks; $index++ ) {
 }
 if ( $done ) {
     if (!$out = @fopen($uploadPath, "wb")) {
+        echo $uploadPath;
         die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
     }
 

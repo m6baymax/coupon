@@ -1,4 +1,6 @@
 
+var imgCache = {};
+
 function uploadimg( option , success , error) {
     var $ = jQuery,
         $list = $('.uploader-list'),
@@ -96,7 +98,93 @@ function uploadimg( option , success , error) {
     });
 }
 
-var imgCache = {};
+function clickRegisterButton(){
+    $(".right-side .pop-window").removeClass("hidden");
+    $(".but1").click(function(){
+        $(".pop").addClass("show");
+        $(".pop-con").removeClass("show");
+        $("." + $(this).val() ).addClass("show");
+    });
+}   
+
+function clickRoleTitle(){
+    $(".right-side .guize").removeClass("hidden");
+    
+    var rules = $(".rule li");
+    var ruleString="";
+    $(".rule li").each(function(_, elem){
+        ruleString += $(elem).text().replace(/^\s*/ , "")+"\r\n";
+    });
+    $("#guize-content").val(ruleString);
+}
+
+function clickImage($this){    
+
+    $(".right-side .uploader").empty().removeClass("hidden").append($("#img-reset-tpl").text());        
+    $(".uploaderIconContainer").empty();
+
+    uploadimg('' , function( file ) {
+        $( '#'+file.id ).addClass('upload-state-done');
+        var oldImgSrc = $this.prop("src");
+        var imgPosition = $this.data("pos");
+        var newImgSrc = "generate/resources/images/" + $("#fileList .info:last").text();
+        $this.prop("src" , newImgSrc);
+        $("#fileList").find(".smallimg").remove();
+    });
+
+    $(".uploader-list").append("<img class='smallimg' width=100 height=100 src='"+ $this.prop("src") +"'>");
+}
+
+function layerIt(obj){
+    if (!obj) return ;
+
+    $(".layer").remove();
+
+    var width = obj.width();
+    var height = obj.height();
+    var parent = obj.parent();
+
+    var guidnum = guid();
+
+    parent.css({
+        "position":"relative"
+    })
+    .append("<div class='layer'></div>")
+    .find(".layer").css({        
+        "width":width,
+        "height":height,
+        "top":obj[0].offsetTop +"px",
+        "left":obj[0].offsetLeft + "px"
+    })
+    .data("guid" , guidnum);
+
+    obj.attr("guid" , guidnum);
+}
+
+function isChrome(){
+    return navigator.userAgent.toLowerCase().match(/chrome/) != null;
+}
+
+function zero_fill_hex(num, digits) {
+  var s = num.toString(16);
+  while (s.length < digits)
+    s = "0" + s;
+  return s;
+} 
+
+function rgb2hex(rgb) {
+  if (rgb.charAt(0) == '#') return rgb;
+  var ds = rgb.split(/\D+/);
+  var decimal = Number(ds[1]) * 65536 + Number(ds[2]) * 256 + Number(ds[3]);
+  return "#" + zero_fill_hex(decimal, 6);
+}
+
+function guid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    });
+}
 
 $(function() {
 
@@ -114,55 +202,33 @@ $(function() {
     
     $(document).resize(setRootFontSize).load(setRootFontSize).resize();
 
-    function clickRegisterButton(){
-        $(".right-side .pop-window").removeClass("hidden");
-        $(".but1").click(function(){
-            $(".pop").addClass("show");
-            $(".pop-con").removeClass("show");
-            $("." + $(this).val() ).addClass("show");
-        });
-    }   
+    $(".worktai").on("mouseenter", ".wrapper img , .rule , .btn-cnt .btn", function (){
+        layerIt($(this)); 
+    });
 
-    function clickRoleTitle(){
-        $(".right-side .guize").removeClass("hidden");
-        
-        var rules = $(".rule li");
-        var ruleString="";
-        $(".rule li").each(function(_, elem){
-            ruleString += $(elem).text().replace(/^\s*/ , "")+"\r\n";
-        });
-        $("#guize-content").val(ruleString);
-    }
-
-    function clickImage($this){    
-
-        $(".right-side .uploader").empty().removeClass("hidden").append($("#img-reset-tpl").text());
-        uploadimg('' , function( file ) {
-            $( '#'+file.id ).addClass('upload-state-done');
-            var oldImgSrc = $this.prop("src");
-            var imgPosition = $this.data("pos");
-            var newImgSrc = "generate/resources/images/" + $("#fileList .info:last").text();
-            $this.prop("src" , newImgSrc);
-            $("#fileList").find(".smallimg").remove();
-        });
-
-        $(".uploader-list").append("<img class='smallimg' width=100 height=100 src='"+ $this.prop("src") +"'>");
-    }
 
     $(".worktai")
-    .on("click", ".wrapper img , .rule , .btn-cnt .btn", function(e) {
+    .on("click", ".wrapper img , .rule , .btn-cnt .btn , .layer", function(e) {
 
         var $this = $(this);
+        if($this.hasClass('layer')){
+           // $this.remove();
+            var guid = $this.data("guid");            
+            $("[guid="+ guid + "]").trigger("click");
+            return ;
+        }
+
         var $pop = $(".pop");
         if($pop.hasClass("show")){
             $pop.removeClass("show");
         }
 
         $(".right-side .tpl").addClass("hidden");
+        $(".defaultSetting").removeClass("hidden");
         $(".wrapper img , .rule, .btn-cnt .btn")
         .removeClass("mouse-click")
         .filter(this)
-        .addClass("mouse-click");
+        .addClass("mouse-click");        
 
         if($this.hasClass("rule")){
             clickRoleTitle();
@@ -180,6 +246,7 @@ $(function() {
     $(".defaultSetting img").click(function(){
         var $this = $(this);
         var imgType = $this.data("imgtype");
+        $(".uploader").empty().addClass("hidden");
         $(".right-side .uploaderIconContainer").empty().append($("#img-reset-tpl").text());
         uploadimg('' , function( file ) {                                        
             var newImgSrc = "generate/resources/images/" + $("#fileList .info:last").text();
@@ -199,11 +266,23 @@ $(function() {
         $(selector).text(newVal);
     });
 
+    if(!isChrome()){
+        $("body").text("该功能仅支持chrome浏览器");
+    }
+
+    $("#popup-btn-color").val(rgb2hex($(".rule .title").css("background-color")));
+    $("#popup-btn-font-color").val(rgb2hex($(".btn-cnt .btn").css("color")));
+    $("#title-color").val(rgb2hex($(".rule .title").css("background-color")));
+    $("#act-guize-color").val(rgb2hex($(".rule .title").css("color")));
+    $("#act-font-color").val(rgb2hex($(".rule .cnt").css("color")));
+    $("#background-color").val(rgb2hex($(".wrapper").css("background-color")));
+
 });
 
 
 var myApp = angular.module('myApp', []);
-myApp.controller('ctrl1', ['$scope', '$http', function($scope, $http) {            
+myApp.controller('ctrl1', ['$scope', '$http', function($scope, $http) {     
+
     $scope.$watch('titleColor', function () {
         $(".rule .title").css("background-color" , $scope.titleColor);
     });
@@ -232,7 +311,11 @@ myApp.controller('ctrl1', ['$scope', '$http', function($scope, $http) {
     });
 
     $scope.$watch('actFontColor', function () {
-        $(".rule .cnt").css("color" , $scope.actFontColor);                
+        $(".rule .cnt").css("color" , $scope.actFontColor);
+    });
+
+    $scope.$watch('popupBtnFontColor', function () {
+        $(".btn-cnt .btn").css("color" , $scope.popupBtnFontColor);                
     });
 
 }]);
@@ -247,24 +330,28 @@ $("#create").click(function(){
     var htmlContent = $(".worktai").html();
     htmlContent = htmlContent.replace(/generate\/(.*\.(jpg|png))/ig , "$1");
     var backgroundColor = $(".wrapper").css("background-color");
+    var appName = $("#appName").val()||'唯品会';
         
     setTimeout(function(){     
         $.ajax({
             url:"../index.php",
             method: "post",
-            data:{ tpl : htmlContent , bgColor:backgroundColor , 
+            data:{ 
+                tpl:htmlContent , 
+                bgColor:backgroundColor , 
                 arrow:imgCache["arrow"]||'arrow.png',
                 close:imgCache["close"]||'close.png',
                 coupon_off:imgCache["coupon_off"]||'coupon_off.png',
                 coupon_on:imgCache["coupon_on"]||'coupon_on.png',
+                appName:appName
             },
             dataType:"json",
             success :function(e){
                 $("#result").removeClass("waiting").addClass("success");
-                $("#result-download").attr("href", e.file).html(e.name);
+                $("#result-download").attr("href", e.file).html("点击下载压缩包");
                 $("#result-url").prop("href", e.path+"/tefile/coupon.html");
                 $("#result-mark-img").prop("src", e.path+"/qrcode.png");
-                $("#result-report").html("生成完毕，左侧可扫码预览。");
+                $("#result-report").html("扫码可预览。");
                 $("#create").text("生 成");
             }
         });
