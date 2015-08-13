@@ -1,6 +1,6 @@
 /*css 重置*/
 body {font-family:Arial,Verdana,Helvetica,"microsoft yahei",sans-serif;}
-body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td,figure {padding:0;margin:0;}
+left {padding:0;margin:0;}
 fieldset,img{border:0;}
 address,caption,cite,code,dfn,em,th,var,optgroup {font-style:normal;font-weight:normal;}
 h1,h2,h3,h4,h5,h6 {font-size:100%;}

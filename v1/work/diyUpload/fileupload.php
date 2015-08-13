@@ -114,7 +114,7 @@ if ($cleanupTargetDir) {
     closedir($dir);
 }
 
-echo var_dump($_FILES);
+//echo var_dump($_FILES);
 // Open temp file
 
 if (!$out = @fopen("{$filePath}_{$chunk}.parttmp", "wb")) {

@@ -1,6 +1,9 @@
 
 var imgCache = {};
 
+/**
+ * 使用webuploader控件进行图片上传
+ */  
 function uploadimg( option , success , error) {
     var $ = jQuery,
         $list = $('.uploader-list'),
@@ -98,6 +101,9 @@ function uploadimg( option , success , error) {
     });
 }
 
+/**
+ * 处理注册领取按钮单击事件
+ */ 
 function clickRegisterButton(){
     $(".right-side .pop-window").removeClass("hidden");
     $(".but1").click(function(){
@@ -107,9 +113,11 @@ function clickRegisterButton(){
     });
 }   
 
+/**
+ * 处理活动规则按钮单击事件
+ */ 
 function clickRoleTitle(){
-    $(".right-side .guize").removeClass("hidden");
-    
+    $(".right-side .guize").removeClass("hidden");    
     var rules = $(".rule li");
     var ruleString="";
     $(".rule li").each(function(_, elem){
@@ -117,11 +125,13 @@ function clickRoleTitle(){
     });
     $("#guize-content").val(ruleString);
 }
-
+/**
+ * 处理图像单击事件
+ */ 
 function clickImage($this){    
 
     $(".right-side .uploader").empty().removeClass("hidden").append($("#img-reset-tpl").text());        
-    $(".uploaderIconContainer").empty();
+    $(".uploaderIconContainer").remove();
 
     uploadimg('' , function( file ) {
         $( '#'+file.id ).addClass('upload-state-done');
@@ -132,9 +142,12 @@ function clickImage($this){
         $("#fileList").find(".smallimg").remove();
     });
 
-    $(".uploader-list").append("<img class='smallimg' width=100 height=100 src='"+ $this.prop("src") +"'>");
+    $(".uploader-list").append("<img class='smallimg' width=200 src='"+ $this.prop("src") +"'>");
 }
 
+/**
+ * 为图像添加覆盖层
+ */
 function layerIt(obj){
     if (!obj) return ;
 
@@ -145,6 +158,12 @@ function layerIt(obj){
     var parent = obj.parent();
 
     var guidnum = guid();
+
+    var lay = parent.find(".layer");
+
+    if(lay.length){
+        lay.removeClass("hidden");
+    }
 
     parent.css({
         "position":"relative"
@@ -187,7 +206,6 @@ function guid() {
 }
 
 $(function() {
-
     // 设置根字体大小            
     setRootFontSize = function() {
         var ww = $(".worktai").width();
@@ -202,20 +220,65 @@ $(function() {
     
     $(document).resize(setRootFontSize).load(setRootFontSize).resize();
 
-    $(".worktai").on("mouseenter", ".wrapper img , .rule , .btn-cnt .btn", function (){
+    //监听全局click事件，用于显示右侧默认选项
+    $(document).on("click" ,"*",function(e){
+        var $this = $(e.target);
+        if(!jQuery.contains($(".wrapper")[0] , e.target) && 
+            !jQuery.contains($(".right-side")[0] , e.target)&&
+            !$this.hasClass("close")&&
+            $(".right-side")[0] != e.target){
+            $(".right-side .tpl").addClass("hidden");
+            $(".defaultSetting").removeClass("hidden");
+            $(".mouse-click" , $(".wrapper")).removeClass("mouse-click");
+            $(".layer").remove();
+            e.stopPropagation();
+        }
+    });
+
+    //为图像添加覆盖层
+    $(".worktai").on("mouseenter", ".wrapper img , .btn-cnt .btn", function (){
         layerIt($(this)); 
     });
 
+    //为活动规则添加修改监听事件
+    $(".cnt").on("keyup" , function (e){
+        clickRoleTitle();
+    });
 
+
+    //为活动规则添加双击编辑事件
+    $(".worktai")
+    .on("dblclick", ".rule , .layer", function(e) {
+        var $this = $(this);
+        if($this.hasClass('layer')){
+            var guid = $this.data("guid");            
+            $("[guid="+ guid + "]").trigger("dblclick");
+            return ;
+        } 
+        $(".cnt" , $this)
+        .attr("contenteditable" , "true")
+        .addClass("active");
+
+        $(".layer")
+        .addClass("hidden");
+
+    });
+
+    //为图片，活动规则，注册领取按钮，添加鼠标单击事件
     $(".worktai")
     .on("click", ".wrapper img , .rule , .btn-cnt .btn , .layer", function(e) {
 
         var $this = $(this);
         if($this.hasClass('layer')){
-           // $this.remove();
             var guid = $this.data("guid");            
             $("[guid="+ guid + "]").trigger("click");
             return ;
+        }
+
+        if($(".cnt" ).hasClass("active") && !$this.hasClass('rule')){
+            $(".cnt" )
+            .attr("contenteditable" , "false")
+            .removeClass("active");
         }
 
         var $pop = $(".pop");
@@ -224,7 +287,6 @@ $(function() {
         }
 
         $(".right-side .tpl").addClass("hidden");
-        $(".defaultSetting").removeClass("hidden");
         $(".wrapper img , .rule, .btn-cnt .btn")
         .removeClass("mouse-click")
         .filter(this)
@@ -243,18 +305,26 @@ $(function() {
         $(".pop , .pop-con").removeClass("show");
     });
 
-    $(".defaultSetting img").click(function(){
+
+    //为右侧图片上传云朵添加mouseenter事件
+    $(".defaultSetting .abs-img").on("mouseenter" , function(){
         var $this = $(this);
-        var imgType = $this.data("imgtype");
+        if($this.parent().find(".uploaderIconContainer").length){
+            return ;
+        }
+
+        $(".uploaderIconContainer").remove();
+        var imgType = $this.parent().find("[data-imgtype]").data("imgtype");
         $(".uploader").empty().addClass("hidden");
-        $(".right-side .uploaderIconContainer").empty().append($("#img-reset-tpl").text());
+        $this.parent().append("<div class='uploaderIconContainer'></div>");
+        $this.parent().find(".uploaderIconContainer").append($("#img-reset-tpl").text());
         uploadimg('' , function( file ) {                                        
             var newImgSrc = "generate/resources/images/" + $("#fileList .info:last").text();
-            $this.prop("src" , newImgSrc);               
+            $this.parent().find("img").prop("src" , newImgSrc);               
             imgCache[imgType] = $("#fileList .info:last").text();
-            $(".right-side .uploaderIconContainer").empty(); 
+            $(".right-side .uploaderIconContainer").remove(); 
         });
-    });
+    });    
 
     $(".poptxt").each(function (_, elem){                
         elem.value = $($(elem).data("elemclass")).text();                
@@ -277,9 +347,95 @@ $(function() {
     $("#act-font-color").val(rgb2hex($(".rule .cnt").css("color")));
     $("#background-color").val(rgb2hex($(".wrapper").css("background-color")));
 
+    /**
+     * 传递模板以及变量给PHP处理，生成压缩包
+     */    
+    $("#create").click(function(){
+        $("#result-report").html("");
+        $("#create").text("生成中...");
+        $("#result").addClass("waiting").removeClass("success");
+        $(".layer").remove();
+
+        var htmlContent = $(".worktai").html();
+        htmlContent = htmlContent.replace(/generate\/(.*\.(jpg|png))/ig , "$1");
+        var backgroundColor = $(".wrapper").css("background-color");
+        var appName = $("#appName").val()||'唯品会';
+            
+        setTimeout(function(){     
+            $.ajax({
+                url:"../index.php",
+                method: "post",
+                data:{ 
+                    tpl:htmlContent , 
+                    bgColor:backgroundColor , 
+                    arrow:imgCache["arrow"]||'arrow.png',
+                    close:imgCache["close"]||'close.png',
+                    coupon_off:imgCache["coupon_off"]||'coupon_off.png',
+                    coupon_on:imgCache["coupon_on"]||'coupon_on.png',
+                    appName:appName
+                },
+                dataType:"json",
+                success :function(e){
+                    $("#result").removeClass("waiting").addClass("success");
+                    $("#result-download").attr("href", e.file).html("点击下载压缩包");
+                    $("#result-url").prop("href", e.path+"/tefile/coupon.html");
+                    $("#result-mark-img").prop("src", e.path+"/qrcode.png");
+                    $("#result-report").html("扫码可预览。");
+                    $("#create").text("生 成");
+                }
+            });
+        }, 20);
+    });
+
+    //新模板上传压缩包
+    $('#newFile').fileupload({
+        dataType: 'json',
+        url:"../new.php",
+        done: function (e, data) {
+            location.href = location.pathname + "?new";
+        }
+    });
+
+    //重置为旧的模板
+    $('.reset').click(function(){
+        $.ajax({
+            dataType: 'json',
+            url:"../reset.php"
+        }).done(function(data){
+            location.href = location.pathname;
+        });
+    });
+
+    var search = location.search;
+    if(location.search=="?new"){
+        $.ajax({ url: "json.js" ,  dataType: 'json'})
+        .done(function(data){
+            //console.log(data);
+            $(".wrapper").css({"background-color":data["background-color"]});
+            $(".btn-cnt .btn").css({"color":data["pop"]["color"]});
+            $(".btn-cnt .btn").css({"background-color":data["pop"]["background-color"]});
+            $(".cnt li").each(function(i,elem){
+                $(elem).text(data["rule"]["rule"][i]);
+            });
+            $(".cnt").trigger("keyup");
+            $(".left-side").trigger("click");
+
+            $(".title").css({"background-color":data["rule"]["background-color"]});
+            $(".title").css({"color":data["rule"]["color"]});
+            $(".rule .cnt").css({"color":data["pop"]["rulecolor"]});
+        });
+    }
+
+    $(".wrapper img").each(function(i , elem){
+        $(elem).prop("src" , $(elem).prop("src") + "?" + (new Date()).getTime());
+    });
+
 });
 
 
+/**
+ * 使用angular绑定拾色器
+ */
 var myApp = angular.module('myApp', []);
 myApp.controller('ctrl1', ['$scope', '$http', function($scope, $http) {     
 
@@ -319,41 +475,3 @@ myApp.controller('ctrl1', ['$scope', '$http', function($scope, $http) {
     });
 
 }]);
-
-
-$("#create").click(function(){
-    
-    $("#result-report").html("");
-    $("#create").text("生成中...");
-    $("#result").addClass("waiting").removeClass("success");
-
-    var htmlContent = $(".worktai").html();
-    htmlContent = htmlContent.replace(/generate\/(.*\.(jpg|png))/ig , "$1");
-    var backgroundColor = $(".wrapper").css("background-color");
-    var appName = $("#appName").val()||'唯品会';
-        
-    setTimeout(function(){     
-        $.ajax({
-            url:"../index.php",
-            method: "post",
-            data:{ 
-                tpl:htmlContent , 
-                bgColor:backgroundColor , 
-                arrow:imgCache["arrow"]||'arrow.png',
-                close:imgCache["close"]||'close.png',
-                coupon_off:imgCache["coupon_off"]||'coupon_off.png',
-                coupon_on:imgCache["coupon_on"]||'coupon_on.png',
-                appName:appName
-            },
-            dataType:"json",
-            success :function(e){
-                $("#result").removeClass("waiting").addClass("success");
-                $("#result-download").attr("href", e.file).html("点击下载压缩包");
-                $("#result-url").prop("href", e.path+"/tefile/coupon.html");
-                $("#result-mark-img").prop("src", e.path+"/qrcode.png");
-                $("#result-report").html("扫码可预览。");
-                $("#create").text("生 成");
-            }
-        });
-    }, 20);
-});
